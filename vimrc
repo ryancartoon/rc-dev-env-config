@@ -203,6 +203,7 @@ if has("gui_running")
     set guioptions-=e
     set t_Co=256
     set guitablabel=%M\ %t
+    set guioptions -=m
 endif
 
 " Set utf8 as standard encoding and en_US as the standard language
@@ -710,7 +711,6 @@ map <C-Tab> :tabnext<cr>
 
 imap jj <ESC>
 set relativenumber
-set guioptions -=m
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
