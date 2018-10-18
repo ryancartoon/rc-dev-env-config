@@ -13,11 +13,6 @@ Plug 'junegunn/vim-easy-align'
 " Any valid git URL is allowed
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
-" Multiple Plug commands can be written in a single line using | separators
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
-
 Plug 'tpope/vim-fugitive'
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree'
@@ -28,18 +23,12 @@ Plug 'scrooloose/syntastic'
 Plug 'kien/ctrlp.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'kshenoy/vim-signature'
-"Plug 'msanders/snipmate.vim'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'majutsushi/tagbar'
 Plug 'Shougo/unite.vim'
-Plug 'scrooloose/nerdcommenter'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+Plug 'tpope/vim-commentary'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'vim-perl/vim-perl'
-Plug 'c9s/perlomni.vim'
 Plug 'morhetz/gruvbox'
-Plug 'svermeulen/vim-easyclip'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -55,13 +44,7 @@ Plug 'henrik/vim-indexed-search'
 Plug 'vim-scripts/matchit.zip'
 Plug 'fatih/vim-go'
 Plug 'amoffat/snake'
-
-
-Plug 'junegunn/goyo.vim'
-Plug 'amix/vim-zenroom2'
 Plug 'terryma/vim-expand-region'
-Plug 'vim-scripts/YankRing.vim'
-Plug 'jlanzarotta/bufexplorer'
 
 
 "Color scheme
