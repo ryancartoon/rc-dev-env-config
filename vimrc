@@ -173,11 +173,6 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-try
-    colorscheme desert
-catch
-endtry
-
 set background=dark
 
 " Set extra options when running in GUI mode
@@ -195,6 +190,22 @@ set encoding=utf8
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
+if has("mac") || has("macunix")
+  set guifont=Monaco:h11
+elseif has("win16") || has("win32")
+  set guifont=Consolas:h9
+else
+  set guifont=Ubuntu\ Mono\ 12
+endif
+
+set linespace=4
+set nowrap
+
+if has("gui_running")
+    colorscheme pencil
+endif
+
+set nu
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -540,54 +551,6 @@ function! CopyMatches(reg)
   execute 'let @'.reg.' = join(hits, "\n") . "\n"'
 endfunction
 command! -register CopyMatches call CopyMatches(<q-reg>)
-
-
-
-""""""""""""""""""""""""""""""
-" keyborad mappings
-""""""""""""""""""""""""""""""
-
-"if has("mac") || has("macunix")
-  "set guifont=Envy\ Code\ R:h13
-  "set guifont=Ubuntu\ Mono:h14
-  "set guifont=Monaco:h11
-"else
-  set guifont=Ubuntu\ Mono\ 12
-  "set guifont=Monaco:h10
-"endif
-
-set linespace=4
-set nowrap
-
-
-if has("gui_running")
-    "colorscheme gruvbox
-    "colorscheme jellybeans
-    "colorscheme molokai
-    "colorscheme Tomorrow-Night-Bright
-    "colorscheme Tomorrow-Night
-    "colorscheme spacegray
-    " colorscheme solarized
-    " colorscheme pencil
-endif
-
-" colorscheme jellybeans
-" colorscheme solarized
-colorscheme pencil
-" colorscheme molokai
-" colorscheme molokai
-" colorscheme gruvbox
-
-" colorscheme grb256
-" colorscheme molokai
-" colorscheme Tomorrow
-" colorscheme Tomorrow-Night
-" colorscheme Tomorrow-Night-Bright
-" colorscheme spacegray
-" colorscheme onedark
-
-set nu
-
 
 " When you press <leader>h you can search and replace the selected text
 vnoremap <silent> <leader>h :call VisualSelection('replace')<CR>
