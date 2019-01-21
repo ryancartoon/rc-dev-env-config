@@ -10,6 +10,8 @@ call plug#begin('~/.vim/plugged')
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 Plug 'junegunn/vim-easy-align'
 
+Plug 'python-mode/python-mode', { 'branch': 'develop' }
+
 " Any valid git URL is allowed
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
@@ -17,7 +19,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'altercation/solarized'
-Plug 'Shougo/neocomplete.vim'
+" Plug 'Shougo/neocomplete.vim'
 Plug 'bling/vim-airline'
 Plug 'scrooloose/syntastic'
 Plug 'kien/ctrlp.vim'
@@ -45,6 +47,7 @@ Plug 'vim-scripts/matchit.zip'
 Plug 'fatih/vim-go'
 Plug 'amoffat/snake'
 Plug 'terryma/vim-expand-region'
+Plug 'ambv/black'
 
 
 "Color scheme
@@ -56,6 +59,15 @@ Plug 'chriskempson/vim-tomorrow-theme'
 Plug 'romainl/Apprentice'
 Plug 'freeo/vim-kalisi'
 Plug 'gilgigilgil/anderson.vim'
+Plug 'hzchirs/vim-material'
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 
 
 " Initialize plugin system
@@ -157,7 +169,6 @@ if has("gui_macvim")
     autocmd GUIEnter * set vb t_vb=
 endif
 
-
 " Add a bit extra margin to the left
 set foldcolumn=1
 
@@ -178,6 +189,8 @@ set background=dark
 " Set extra options when running in GUI mode
 if has("gui_running")
     set guioptions-=T
+    set guioptions-=L
+    set guioptions-=R
     set guioptions-=e
     set t_Co=256
     set guitablabel=%M\ %t
@@ -193,7 +206,7 @@ set ffs=unix,dos,mac
 if has("mac") || has("macunix")
   set guifont=Monaco:h11
 elseif has("win16") || has("win32")
-  set guifont=Consolas:h9
+  set guifont=Operator\ Mono\ Light:h9
 else
   set guifont=Ubuntu\ Mono\ 12
 endif
@@ -206,6 +219,7 @@ if has("gui_running")
 endif
 
 set nu
+set relativenumber
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -456,6 +470,7 @@ let g:quickrun_config = {
 """"""""""""""""""""""""""""""
 let g:NERDTreeWinPos = "left"
 let g:NERDTreeWinSize = 26
+let NERDTreeIgnore=['\.pyc$', '\~$']
 " autocmd vimenter * NERDTree
 
 
@@ -506,40 +521,6 @@ highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
 
 
-
-"""""""""""""""""""""
-"clipboard
-vmap F "+y
-noremap <leader>qq :q<cr>
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" easyclip
-" https://github.com/svermeulen/vim-easyclip.git
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:EasyClipAutoFormat = 1
-let g:EasyClipDoSystemSync = 1
-let g:EasyClipUseYankDefaults = 1
-let g:EasyClipUseCutDefaults = 1
-let g:EasyClipUsePasteDefaults = 1
-let g:EasyClipEnableBlackHoleRedirect = 1
-let g:EasyClipUsePasteToggleDefaults = 1
-
-let g:EasyClipUseCutDefaults = 0
-nmap <Leader>x <Plug>MoveMotionPlug
-xmap <Leader>x <Plug>MoveMotionXPlug
-nmap <Leader>xx <Plug>MoveMotionLinePlug
-
-let g:EasyClipUsePasteToggleDefaults = 0
-
-nmap <Leader>vf <plug>EasyClipSwapPasteForward
-nmap <Leader>vb <plug>EasyClipSwapPasteBackwards
-
-
-
-" let g:airline_theme='badwolf'
-let g:airline_theme='pencil'
-
 """"""""""""""""""""""""""""""
 " customized functions
 """"""""""""""""""""""""""""""
@@ -587,117 +568,27 @@ function! VisualSelection(direction) range
     let @" = l:saved_reg
 endfunction
 
-
-" #####################
-" django setting
-" #####################
-
-let b:surround_{char2nr("v")} = "{{ \r }}"
-let b:surround_{char2nr("{")} = "{{ \r }}"
-let b:surround_{char2nr("%")} = "{% \r %}"
-let b:surround_{char2nr("b")} = "{% block \1block name: \1 %}\r{% endblock \1\1 %}"
-let b:surround_{char2nr("i")} = "{% if \1condition: \1 %}\r{% endif %}"
-let b:surround_{char2nr("w")} = "{% with \1with: \1 %}\r{% endwith %}"
-let b:surround_{char2nr("f")} = "{% for \1for loop: \1 %}\r{% endfor %}"
-let b:surround_{char2nr("c")} = "{% comment %}\r{% endcomment %}"
-
-let g:last_relative_dir = ''
-nnoremap \1 :call RelatedFile ("models.py")<cr>
-nnoremap \2 :call RelatedFile ("views.py")<cr>
-nnoremap \3 :call RelatedFile ("urls.py")<cr>
-nnoremap \4 :call RelatedFile ("admin.py")<cr>
-nnoremap \5 :call RelatedFile ("tests.py")<cr>
-nnoremap \6 :call RelatedFile ( "templates/" )<cr>
-nnoremap \7 :call RelatedFile ( "templatetags/" )<cr>
-nnoremap \8 :call RelatedFile ( "management/" )<cr>
-nnoremap \0 :e settings.py<cr>
-nnoremap \9 :e urls.py<cr>
-
-fun! RelatedFile(file)
-    #This is to check that the directory looks djangoish
-    if filereadable(expand("%:h"). '/models.py') || isdirectory(expand("%:h") . "/templatetags/")
-        exec "edit %:h/" . a:file
-        let g:last_relative_dir = expand("%:h") . '/'
-        return ''
-    endif
-    if g:last_relative_dir != ''
-        exec "edit " . g:last_relative_dir . a:file
-        return ''
-    endif
-    echo "Cant determine where relative file is : " . a:file
-    return ''
-endfun
-
-" fun SetAppDir()
-"     if filereadable(expand("%:h"). '/models.py') || isdirectory(expand("%:h") . "/templatetags/")
-"         let g:last_relative_dir = expand("%:h") . '/'
-"         return ''
-"     endif
-" endfun
-" autocmd BufEnter *.py call SetAppDir()
-
-
-" #####################
-" python setting
-" #####################
-
-imap <s-cr> <esc>o
-imap <c-cr> <esc>A:<cr>
-
-
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
-nnoremap <C-b> <PageUp>
-nnoremap <C-f> <PageDown>
-map <C-Tab> :tabnext<cr>
 " set cursorline
-
-
-imap jj <ESC>
-set relativenumber
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
+" syntastic setting
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_python_checkers = ['flake8']
 
+let g:python3_host_prog = 'C:\Users\ryan\AppData\Local\Programs\Python\Python37-32\python.exe'
+let g:deoplete#enable_at_startup = 1
+let g:pymode_python = 'python3'
 
-let g:syntastic_python_checkers = ['pylint']
-
+" customized maps
+map <C-Tab> :tabnext<cr>
+noremap <leader>qq :q<cr>
+imap jj <ESC>
