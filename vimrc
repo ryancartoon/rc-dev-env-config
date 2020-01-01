@@ -49,6 +49,12 @@ Plug 'amoffat/snake'
 Plug 'terryma/vim-expand-region'
 Plug 'mileszs/ack.vim'
 
+" auto completion
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'Shougo/deoplete.nvim'
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
+
 " ale
 let g:ale_completion_enabled = 1
 Plug 'dense-analysis/ale'
@@ -632,12 +638,14 @@ nmap <Leader>vb <plug>EasyClipSwapPasteBackwards
 
 
 " Check Python files with flake8 and pylint.
-let b:ale_linters = ['flake8', 'pylint']
+let b:ale_linters = ['flake8']
 " Fix Python files with autopep8 and yapf.
-let b:ale_fixers = ['autopep8', 'yapf']
+let b:ale_fixers = ['yapf']
 " Disable warnings about trailing whitespace for Python files.
 let b:ale_warn_about_trailing_whitespace = 0
 
 let g:ale_linters = {
     \   'go': ['gometalinter', 'gofmt'],
     \}
+
+let g:deoplete#enable_at_startup = 1
