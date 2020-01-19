@@ -66,6 +66,7 @@ Plug 'chriskempson/vim-tomorrow-theme'
 Plug 'romainl/Apprentice'
 Plug 'freeo/vim-kalisi'
 Plug 'gilgigilgil/anderson.vim'
+Plug 'joshdick/onedark.vim'
 
 
 " Initialize plugin system
