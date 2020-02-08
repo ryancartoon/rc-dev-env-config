@@ -20,10 +20,10 @@ Plug 'ludovicchabant/vim-gutentags'
 
 Plug 'psf/black'
 Plug 'tpope/vim-fugitive'
-Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'bling/vim-airline'
-" Plug 'scrooloose/syntastic'
+Plug 'itchyny/lightline.vim'
+Plug 'maximbaz/lightline-ale'
+" Plug 'bling/vim-airline'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'kshenoy/vim-signature'
@@ -32,7 +32,6 @@ Plug 'majutsushi/tagbar'
 Plug 'Shougo/unite.vim'
 Plug 'tpope/vim-commentary'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'morhetz/gruvbox'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -40,10 +39,7 @@ Plug 'flazz/vim-colorschemes'
 Plug 'godlygeek/tabular'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'benmills/vimux'
-Plug 'vim-scripts/taglist.vim'
 Plug 'plasticboy/vim-markdown'
-Plug 'henrik/vim-indexed-search'
-Plug 'vim-scripts/matchit.zip'
 Plug 'fatih/vim-go'
 Plug 'amoffat/snake'
 Plug 'terryma/vim-expand-region'
@@ -61,7 +57,7 @@ Plug 'dense-analysis/ale'
 
 
 "Color scheme
-Plug 'altercation/solarized'
+Plug 'morhetz/gruvbox'
 Plug 'ajh17/Spacegray.vim'
 Plug 'tomasr/molokai'
 Plug 'chriskempson/base16-vim'
@@ -70,6 +66,7 @@ Plug 'chriskempson/vim-tomorrow-theme'
 Plug 'romainl/Apprentice'
 Plug 'freeo/vim-kalisi'
 Plug 'gilgigilgil/anderson.vim'
+Plug 'joshdick/onedark.vim'
 
 
 " Initialize plugin system
@@ -312,10 +309,10 @@ if has("gui_running")
     elseif has("mac") || has("macunix")
       set guifont=Monaco:h11
     else
-        set guifont=Operator\ Mono\ weight=330\ 11
+        set guifont=Operator\ Mono\ semi-Light\ 12
     endif
 else
-    colorscheme Tomorrow-Night-Bright
+    colorscheme Atelier_LakesideDark
 endif
 
 
@@ -607,8 +604,8 @@ map <leader>fm :ctrlpmark<cr>
 
 " vim-go
 
-let g:go_def_mode='gopls'
-let g:go_info_mode='gopls'
+" let g:go_def_mode='gopls'
+" let g:go_info_mode='gopls'
 
 
 " easyclip
@@ -624,8 +621,10 @@ let g:EasyClipUseCutDefaults = 0
 let g:EasyClipUsePasteToggleDefaults = 0
 
 
+" airline
 " let g:airline_theme='badwolf'
 " let g:airline_theme='pencil'
+" let g:airline#extensions#ale#enabled = 1
 
 " others
 
@@ -638,14 +637,41 @@ nmap <Leader>vb <plug>EasyClipSwapPasteBackwards
 
 
 " Check Python files with flake8 and pylint.
-let b:ale_linters = ['flake8']
+" let b:ale_linters = ['flake8']
 " Fix Python files with autopep8 and yapf.
-let b:ale_fixers = ['yapf']
+" let b:ale_fixers = ['yapf']
 " Disable warnings about trailing whitespace for Python files.
 let b:ale_warn_about_trailing_whitespace = 0
-
+let g:ale_sign_column_always = 1
 let g:ale_linters = {
-    \   'go': ['gometalinter', 'gofmt'],
+    \   'go': ['golangci-lint','gometalinter', 'gofmt'],
     \}
 
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#go#gocode_binary = '/home/ryan/go/bin/gocode'
+
+""""""""""""""
+" lightline
+
+"Register the components:
+let g:lightline = {}
+
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
+
+" Set color to the components:
+let g:lightline.component_type = {
+      \     'linter_checking': 'left',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'left',
+      \ }
+
+" Add the components to the lightline, for example to the right side:
+"
+let g:lightline.active = { 'right': [[ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]] }
+
